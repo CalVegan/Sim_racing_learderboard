@@ -3,20 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <title>Racing Leaderboard</title>
+  <!-- Viewport for responsiveness -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Favicon -->
   <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
-  <!-- Include Firebase scripts (version 9+). Use the compat versions if you're using older syntax -->
+  <!-- Firebase scripts (compat for older syntax) -->
   <script src="https://www.gstatic.com/firebasejs/9.6.11/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.11/firebase-firestore-compat.js"></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    /* Base styling */
+    /* Base styling, now with a large background image */
     body {
       margin: 0;
       padding: 0;
       font-family: Impact, sans-serif;
-      background-color: #000;
       color: #fff;
+      /* Set black as fallback, then place the Sebenza Hat as background */
+      background: #000 url("Sebenza Hat.png") no-repeat center center fixed;
+      background-size: contain; /* Or 'cover' if you want it to fill the entire screen */
     }
 
     .logo-container {
@@ -27,12 +30,13 @@
       max-width: 200px;
     }
 
-    /* Container for leaderboards */
     .container {
       display: flex;
       justify-content: space-around;
       padding: 20px;
       flex-wrap: wrap;
+      position: relative; /* So the leaderboards appear above the background image */
+      z-index: 1;
     }
 
     .leaderboard {
@@ -112,6 +116,7 @@
       display: none;
       align-items: center;
       justify-content: center;
+      z-index: 999; /* Ensure modal is on top of everything */
     }
 
     .modal {
@@ -120,13 +125,12 @@
       border-radius: 4px;
       box-sizing: border-box;
       overflow: auto;
-      /* Fill 3/4 of screen to make input easier on small devices */
       width: 75vw;
       height: 75vh;
       max-width: 600px;
       max-height: 800px;
       padding: 20px;
-      font-size: 1.2em; /* Scale up text inside modal */
+      font-size: 1.2em;
     }
 
     .modal h3 {
@@ -176,11 +180,11 @@
         max-width: 150px;
       }
       .modal {
-        font-size: 1.0em; /* Slightly smaller if desired on phones */
+        font-size: 1.0em;
       }
     }
 
-    /* Larger screens, like a 55 inch TV (often 1080p or higher) */
+    /* Larger screens, like a 55 inch TV */
     @media (min-width: 1920px) {
       body {
         font-size: 1.5em;
@@ -198,14 +202,13 @@
         font-size: 1.2em;
       }
       .modal {
-        font-size: 1.3em; /* Slightly larger text in the modal on big screens */
+        font-size: 1.3em;
       }
     }
   </style>
 </head>
 <body>
   <div class="logo-container">
-    <!-- Updated image filename -->
     <img src="Sebenza_Wordmark_White (1).png" alt="Sebenza Logo">
   </div>
   <div class="container">
@@ -408,4 +411,49 @@
         tdName.textContent = data.name;
         tr.appendChild(tdName);
 
-        /
+        // Company only for EveryoneElse
+        if (collectionName === 'EveryoneElse') {
+          const tdCompany = document.createElement('td');
+          tdCompany.textContent = data.company;
+          tr.appendChild(tdCompany);
+        }
+
+        // Month
+        const tdMonth = document.createElement('td');
+        tdMonth.textContent = data.month;
+        tr.appendChild(tdMonth);
+
+        // Time
+        const minutes = data.minutes || 0;
+        const seconds = data.seconds || 0;
+        const ms = data.milliseconds || 0;
+        const formattedTime = `${minutes}:${seconds.toString().padStart(2, '0')}.${ms.toString().padStart(3, '0')}`;
+        const tdTime = document.createElement('td');
+        tdTime.textContent = formattedTime;
+        tr.appendChild(tdTime);
+
+        // Delete
+        const tdDel = document.createElement('td');
+        const delBtn = document.createElement('button');
+        delBtn.textContent = 'X';
+        delBtn.className = 'delete-btn';
+        delBtn.onclick = () => deleteLapTime(collectionName, doc.id);
+        tdDel.appendChild(delBtn);
+        tr.appendChild(tdDel);
+
+        tableBody.appendChild(tr);
+      });
+    }
+
+    async function deleteLapTime(collectionName, docId) {
+      await db.collection(collectionName).doc(docId).delete();
+      fetchLeaderboardData(collectionName);
+    }
+
+    window.onload = function() {
+      fetchLeaderboardData('SebenzaStaff');
+      fetchLeaderboardData('EveryoneElse');
+    };
+  </script>
+</body>
+</html>
