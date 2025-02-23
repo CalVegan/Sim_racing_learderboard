@@ -11,20 +11,76 @@
   <script src="https://www.gstatic.com/firebasejs/9.6.11/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.11/firebase-firestore-compat.js"></script>
   <style>
-    /* Base styling, now with a large background image */
+    /* Base styling (no hat image) */
     body {
       margin: 0;
       padding: 0;
       font-family: Impact, sans-serif;
       color: #fff;
-      /* Set black as fallback, then place the Sebenza Hat as background */
-      background: #000 url("Sebenza Hat.png") no-repeat center center fixed;
-      background-size: contain; /* Or 'cover' if you want it to fill the entire screen */
+      background: #000; /* Plain black background */
+      position: relative;
+    }
+
+    /* Container to hold the scattered background images */
+    .bg-images {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none; /* So clicks pass through to the page */
+    }
+    /* All scattered images share these base rules */
+    .bg-images img {
+      position: absolute;
+      width: 90px;         /* Keep them small */
+      opacity: 0.7;        /* Slight transparency if desired */
+      transform-origin: center;
+    }
+    /* Manually place each image at a different angle & position */
+    .img1 {
+      top: 5%;
+      left: 10%;
+      transform: rotate(-15deg);
+    }
+    .img2 {
+      top: 20%;
+      left: 75%;
+      transform: rotate(20deg);
+    }
+    .img3 {
+      top: 35%;
+      left: 15%;
+      transform: rotate(10deg);
+    }
+    .img4 {
+      top: 50%;
+      left: 60%;
+      transform: rotate(-25deg);
+    }
+    .img5 {
+      top: 65%;
+      left: 25%;
+      transform: rotate(15deg);
+    }
+    .img6 {
+      top: 75%;
+      left: 80%;
+      transform: rotate(-10deg);
+    }
+    .img7 {
+      top: 15%;
+      left: 45%;
+      transform: rotate(30deg);
     }
 
     .logo-container {
       text-align: center;
       margin: 20px 0;
+      z-index: 1; /* Ensure the main content sits above background images */
+      position: relative;
     }
     .logo-container img {
       max-width: 200px;
@@ -35,7 +91,7 @@
       justify-content: space-around;
       padding: 20px;
       flex-wrap: wrap;
-      position: relative; /* So the leaderboards appear above the background image */
+      position: relative;
       z-index: 1;
     }
 
@@ -116,7 +172,7 @@
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 999; /* Ensure modal is on top of everything */
+      z-index: 999;
     }
 
     .modal {
@@ -208,9 +264,22 @@
   </style>
 </head>
 <body>
+  <!-- Scattered background images container -->
+  <div class="bg-images">
+    <img src="FEDE500.png" alt="FEDE" class="img1">
+    <img src="Finger point500.png" alt="Finger Point" class="img2">
+    <img src="Hand500.png" alt="Hand" class="img3">
+    <img src="Hola.png" alt="Hola" class="img4">
+    <img src="Traffic500.png" alt="Traffic Light" class="img5">
+    <img src="Taxi500.png" alt="Taxi" class="img6">
+    <img src="Sebenza_Wordmark_White (1).png" alt="Sebenza Wordmark" class="img7">
+  </div>
+
   <div class="logo-container">
+    <!-- Keep your main logo if you wish, or remove if not needed -->
     <img src="Sebenza_Wordmark_White (1).png" alt="Sebenza Logo">
   </div>
+
   <div class="container">
     <!-- Sebenza Staff leaderboard (no Company column) -->
     <div class="leaderboard">
@@ -251,6 +320,7 @@
     </div>
   </div>
 
+  <!-- Modal -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
       <h3 id="modalTitle">Add Lap Time</h3>
