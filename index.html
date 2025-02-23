@@ -11,7 +11,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.6.11/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.11/firebase-firestore-compat.js"></script>
   <style>
-    /* Base styling (no hat image) */
+    /* Base styling */
     body {
       margin: 0;
       padding: 0;
@@ -39,47 +39,85 @@
       opacity: 0.7;        /* Slight transparency if desired */
       transform-origin: center;
     }
-    /* Manually place each image at a different angle & position */
+
+    /* Example float/bounce animations for each icon */
+    /* Adjust durations, translate values, etc. as you like */
+    @keyframes float1 {
+      0%   { transform: rotate(-15deg) translate(0, 0); }
+      50%  { transform: rotate(-15deg) translate(20px, -20px); }
+      100% { transform: rotate(-15deg) translate(0, 0); }
+    }
+    @keyframes float2 {
+      0%   { transform: rotate(20deg) translate(0,0); }
+      50%  { transform: rotate(20deg) translate(-20px, 20px); }
+      100% { transform: rotate(20deg) translate(0,0); }
+    }
+    @keyframes float3 {
+      0%   { transform: rotate(10deg) translate(0,0); }
+      50%  { transform: rotate(10deg) translate(15px, 25px); }
+      100% { transform: rotate(10deg) translate(0,0); }
+    }
+    @keyframes float4 {
+      0%   { transform: rotate(-25deg) translate(0,0); }
+      50%  { transform: rotate(-25deg) translate(-25px, 15px); }
+      100% { transform: rotate(-25deg) translate(0,0); }
+    }
+    @keyframes float5 {
+      0%   { transform: rotate(15deg) translate(0,0); }
+      50%  { transform: rotate(15deg) translate(30px, -15px); }
+      100% { transform: rotate(15deg) translate(0,0); }
+    }
+    @keyframes float6 {
+      0%   { transform: rotate(-10deg) translate(0,0); }
+      50%  { transform: rotate(-10deg) translate(-20px, 20px); }
+      100% { transform: rotate(-10deg) translate(0,0); }
+    }
+    @keyframes float7 {
+      0%   { transform: rotate(30deg) translate(0,0); }
+      50%  { transform: rotate(30deg) translate(25px, -20px); }
+      100% { transform: rotate(30deg) translate(0,0); }
+    }
+
     .img1 {
       top: 5%;
       left: 10%;
-      transform: rotate(-15deg);
+      animation: float1 8s ease-in-out infinite;
     }
     .img2 {
       top: 20%;
       left: 75%;
-      transform: rotate(20deg);
+      animation: float2 10s ease-in-out infinite;
     }
     .img3 {
       top: 35%;
       left: 15%;
-      transform: rotate(10deg);
+      animation: float3 12s ease-in-out infinite;
     }
     .img4 {
       top: 50%;
       left: 60%;
-      transform: rotate(-25deg);
+      animation: float4 9s ease-in-out infinite;
     }
     .img5 {
       top: 65%;
       left: 25%;
-      transform: rotate(15deg);
+      animation: float5 11s ease-in-out infinite;
     }
     .img6 {
       top: 75%;
       left: 80%;
-      transform: rotate(-10deg);
+      animation: float6 10s ease-in-out infinite;
     }
     .img7 {
       top: 15%;
       left: 45%;
-      transform: rotate(30deg);
+      animation: float7 12s ease-in-out infinite;
     }
 
     .logo-container {
       text-align: center;
       margin: 20px 0;
-      z-index: 1; /* Ensure the main content sits above background images */
+      z-index: 1; 
       position: relative;
     }
     .logo-container img {
@@ -276,7 +314,6 @@
   </div>
 
   <div class="logo-container">
-    <!-- Keep your main logo if you wish, or remove if not needed -->
     <img src="Sebenza_Wordmark_White (1).png" alt="Sebenza Logo">
   </div>
 
