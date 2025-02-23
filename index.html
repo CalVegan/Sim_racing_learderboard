@@ -9,6 +9,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.6.11/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.11/firebase-firestore-compat.js"></script>
   <style>
+    /* Base styling */
     body {
       margin: 0;
       padding: 0;
@@ -16,6 +17,7 @@
       background-color: #000;
       color: #fff;
     }
+
     .logo-container {
       text-align: center;
       margin: 20px 0;
@@ -23,11 +25,14 @@
     .logo-container img {
       max-width: 200px;
     }
+
+    /* Container for leaderboards */
     .container {
       display: flex;
       justify-content: space-around;
       padding: 20px;
     }
+
     .leaderboard {
       width: 45%;
       background-color: #111;
@@ -36,6 +41,7 @@
       overflow: hidden;
       margin-bottom: 20px;
     }
+
     .leaderboard-header {
       background-color: #FFD900;
       color: #000;
@@ -43,10 +49,12 @@
       font-size: 1.2em;
       text-align: center;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
     }
+
     th {
       background-color: #333;
       color: #FFD900;
@@ -55,17 +63,21 @@
       font-weight: normal;
       font-size: 0.9em;
     }
+
     td {
       padding: 8px;
       border-bottom: 1px solid #333;
       font-size: 0.9em;
     }
+
     tr:nth-child(even) {
       background-color: #222;
     }
+
     .rank {
       width: 40px;
     }
+
     .delete-btn {
       cursor: pointer;
       color: #FFD900;
@@ -73,6 +85,7 @@
       border: none;
       font-size: 0.8em;
     }
+
     .add-button {
       display: inline-block;
       margin: 10px;
@@ -85,6 +98,7 @@
       border: none;
       font-size: 0.9em;
     }
+
     .modal-overlay {
       position: fixed;
       top: 0; 
@@ -96,6 +110,7 @@
       align-items: center;
       justify-content: center;
     }
+
     .modal {
       background-color: #111;
       border: 2px solid #FFD900;
@@ -103,16 +118,19 @@
       padding: 20px;
       width: 300px;
     }
+
     .modal h3 {
       margin-top: 0;
       margin-bottom: 10px;
       color: #FFD900;
     }
+
     .modal label {
       display: block;
       margin: 5px 0 2px;
       font-size: 0.9em;
     }
+
     .modal input {
       width: 100%;
       padding: 6px;
@@ -121,6 +139,7 @@
       background-color: #222;
       color: #fff;
     }
+
     .modal-select {
       width: 100%;
       padding: 6px;
@@ -129,6 +148,7 @@
       background-color: #222;
       color: #fff;
     }
+
     .modal button {
       background-color: #FFD900;
       color: #000;
@@ -138,6 +158,46 @@
       border-radius: 4px;
       margin-right: 10px;
       font-size: 0.9em;
+    }
+
+    /* Responsive styling for phones */
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        align-items: center;
+      }
+      .leaderboard {
+        width: 90%;
+        margin-bottom: 20px;
+      }
+      .leaderboard-header {
+        font-size: 1em;
+      }
+      th, td {
+        font-size: 0.8em;
+      }
+      .logo-container img {
+        max-width: 150px;
+      }
+    }
+
+    /* Larger screens, like a 55 inch TV (often 1080p or higher) */
+    @media (min-width: 1920px) {
+      body {
+        font-size: 1.5em;
+      }
+      .leaderboard-header {
+        font-size: 1.5em;
+      }
+      .logo-container img {
+        max-width: 300px;
+      }
+      th, td {
+        font-size: 1em;
+      }
+      .add-button {
+        font-size: 1.2em;
+      }
     }
   </style>
 </head>
