@@ -285,6 +285,15 @@
         const data = doc.data();
         const tr = document.createElement('tr');
 
+        // Apply top 3 colours
+        if(rank === 1) {
+          tr.style.color = '#FFD700'; // Gold
+        } else if(rank === 2) {
+          tr.style.color = '#C0C0C0'; // Silver
+        } else if(rank === 3) {
+          tr.style.color = '#CD7F32'; // Bronze
+        }
+
         const tdRank = document.createElement('td');
         tdRank.className = 'rank';
         tdRank.textContent = rank++;
