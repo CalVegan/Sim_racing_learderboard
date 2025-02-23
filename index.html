@@ -8,6 +8,7 @@
   <!-- Include Firebase scripts (version 9+). Use the compat versions if you're using older syntax -->
   <script src="https://www.gstatic.com/firebasejs/9.6.11/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.11/firebase-firestore-compat.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     /* Base styling */
     body {
@@ -31,15 +32,17 @@
       display: flex;
       justify-content: space-around;
       padding: 20px;
+      flex-wrap: wrap;
     }
 
     .leaderboard {
-      width: 45%;
       background-color: #111;
       border: 2px solid #FFD900;
       border-radius: 4px;
       overflow: hidden;
-      margin-bottom: 20px;
+      margin: 10px;
+      flex: 1 1 400px;
+      max-width: 600px;
     }
 
     .leaderboard-header {
@@ -115,8 +118,15 @@
       background-color: #111;
       border: 2px solid #FFD900;
       border-radius: 4px;
+      box-sizing: border-box;
+      overflow: auto;
+      /* Fill 3/4 of screen to make input easier on small devices */
+      width: 75vw;
+      height: 75vh;
+      max-width: 600px;
+      max-height: 800px;
       padding: 20px;
-      width: 300px;
+      font-size: 1.2em; /* Scale up text inside modal */
     }
 
     .modal h3 {
@@ -162,22 +172,11 @@
 
     /* Responsive styling for phones */
     @media (max-width: 768px) {
-      .container {
-        flex-direction: column;
-        align-items: center;
-      }
-      .leaderboard {
-        width: 90%;
-        margin-bottom: 20px;
-      }
-      .leaderboard-header {
-        font-size: 1em;
-      }
-      th, td {
-        font-size: 0.8em;
-      }
       .logo-container img {
         max-width: 150px;
+      }
+      .modal {
+        font-size: 1.0em; /* Slightly smaller if desired on phones */
       }
     }
 
@@ -198,14 +197,19 @@
       .add-button {
         font-size: 1.2em;
       }
+      .modal {
+        font-size: 1.3em; /* Slightly larger text in the modal on big screens */
+      }
     }
   </style>
 </head>
 <body>
   <div class="logo-container">
+    <!-- Updated image filename -->
     <img src="Sebenza_Wordmark_White (1).png" alt="Sebenza Logo">
   </div>
   <div class="container">
+    <!-- Sebenza Staff leaderboard (no Company column) -->
     <div class="leaderboard">
       <div class="leaderboard-header">Sebenza Staff</div>
       <table id="staffTable">
@@ -213,7 +217,6 @@
           <tr>
             <th class="rank">Rnk</th>
             <th>Name</th>
-            <th>Company</th>
             <th>Month</th>
             <th>Time</th>
             <th>Del</th>
@@ -224,6 +227,7 @@
       </table>
       <button class="add-button" onclick="openModal('staff')">+</button>
     </div>
+    <!-- Everyone Else leaderboard (includes Company column) -->
     <div class="leaderboard">
       <div class="leaderboard-header">Everyone Else</div>
       <table id="everyoneTable">
@@ -247,10 +251,15 @@
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
       <h3 id="modalTitle">Add Lap Time</h3>
+      <!-- Name -->
       <label for="nameInput">Name</label>
       <input type="text" id="nameInput" />
-      <label for="companyInput">Company</label>
+
+      <!-- Company (hidden if staff) -->
+      <label for="companyInput" id="companyLabel">Company</label>
       <input type="text" id="companyInput" />
+
+      <!-- Month -->
       <label for="monthSelect">Month</label>
       <select id="monthSelect" class="modal-select">
         <option>Jan. 2025</option>
@@ -266,12 +275,16 @@
         <option>Nov. 2025</option>
         <option>Dec. 2025</option>
       </select>
+
+      <!-- Time Inputs -->
       <label for="minutesInput">Minutes</label>
       <input type="number" id="minutesInput" min="0" value="0" />
       <label for="secondsInput">Seconds</label>
       <input type="number" id="secondsInput" min="0" max="59" value="0" />
       <label for="msInput">Milliseconds</label>
       <input type="number" id="msInput" min="0" max="999" value="0" />
+
+      <!-- Save/Cancel Buttons -->
       <button onclick="saveLapTime()">Save</button>
       <button onclick="closeModal()">Cancel</button>
     </div>
@@ -299,6 +312,17 @@
       document.getElementById('modalTitle').textContent =
         type === 'staff' ? 'Add Lap Time (Sebenza Staff)' : 'Add Lap Time (Everyone Else)';
       document.getElementById('modalOverlay').style.display = 'flex';
+
+      // Hide company label/input if staff
+      const companyLabel = document.getElementById('companyLabel');
+      const companyInput = document.getElementById('companyInput');
+      if (type === 'staff') {
+        companyLabel.style.display = 'none';
+        companyInput.style.display = 'none';
+      } else {
+        companyLabel.style.display = 'block';
+        companyInput.style.display = 'block';
+      }
     }
 
     function closeModal() {
@@ -317,7 +341,10 @@
 
     async function saveLapTime() {
       const name = document.getElementById('nameInput').value.trim();
-      const company = document.getElementById('companyInput').value.trim();
+      const company = (currentLeaderboard === 'staff') 
+        ? "" // No company for Sebenza staff
+        : document.getElementById('companyInput').value.trim();
+
       const month = document.getElementById('monthSelect').value;
       const minutes = parseInt(document.getElementById('minutesInput').value) || 0;
       const seconds = parseInt(document.getElementById('secondsInput').value) || 0;
@@ -347,9 +374,12 @@
         .limit(10)
         .get();
 
-      const tableBody = collectionName === 'SebenzaStaff'
-        ? document.getElementById('staffTbody')
-        : document.getElementById('everyoneTbody');
+      let tableBody;
+      if (collectionName === 'SebenzaStaff') {
+        tableBody = document.getElementById('staffTbody');
+      } else {
+        tableBody = document.getElementById('everyoneTbody');
+      }
 
       tableBody.innerHTML = '';
 
@@ -367,52 +397,15 @@
           tr.style.color = '#CD7F32'; // Bronze
         }
 
+        // Rank
         const tdRank = document.createElement('td');
         tdRank.className = 'rank';
         tdRank.textContent = rank++;
         tr.appendChild(tdRank);
 
+        // Name
         const tdName = document.createElement('td');
         tdName.textContent = data.name;
         tr.appendChild(tdName);
 
-        const tdCompany = document.createElement('td');
-        tdCompany.textContent = data.company;
-        tr.appendChild(tdCompany);
-
-        const tdMonth = document.createElement('td');
-        tdMonth.textContent = data.month;
-        tr.appendChild(tdMonth);
-
-        const minutes = data.minutes || 0;
-        const seconds = data.seconds || 0;
-        const ms = data.milliseconds || 0;
-        const formattedTime = `${minutes}:${seconds.toString().padStart(2, '0')}.${ms.toString().padStart(3, '0')}`;
-        const tdTime = document.createElement('td');
-        tdTime.textContent = formattedTime;
-        tr.appendChild(tdTime);
-
-        const tdDel = document.createElement('td');
-        const delBtn = document.createElement('button');
-        delBtn.textContent = 'X';
-        delBtn.className = 'delete-btn';
-        delBtn.onclick = () => deleteLapTime(collectionName, doc.id);
-        tdDel.appendChild(delBtn);
-        tr.appendChild(tdDel);
-
-        tableBody.appendChild(tr);
-      });
-    }
-
-    async function deleteLapTime(collectionName, docId) {
-      await db.collection(collectionName).doc(docId).delete();
-      fetchLeaderboardData(collectionName);
-    }
-
-    window.onload = function() {
-      fetchLeaderboardData('SebenzaStaff');
-      fetchLeaderboardData('EveryoneElse');
-    };
-  </script>
-</body>
-</html>
+        /
